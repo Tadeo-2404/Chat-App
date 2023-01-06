@@ -1,18 +1,26 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+import express from "express"
+import http from "http";
+import cors from "cors";
+import { Server } from "socket.io";
+const app = express();
+const server = http.createServer(app);
 const port = process.env.PORT || 3000;
+app.use(cors());
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
 });
 
-io.on('connection', (socket) => {
-  socket.on('chat message', msg => {
-    io.emit('chat message', msg);
-  });
-});
+io.on('connection',  (socket) => {
+  console.log(`ID: ${socket.id} se ha unido`)
+  socket.on('disconnect', () => {
+    console.log(`ID: ${socket.id} ha abandonado la sala`)
+  })
+})
 
-http.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
-});
+server.listen(port, () => {
+  console.log(`APP ON PORT: ${port}`)
+})
