@@ -1,11 +1,10 @@
-import io from "socket.io-client";
-const connection = io.connect("http://localhost:3000");
+//components
+import JoinRoom from "./components/JoinRoom";
+
 function App() {
   return (
-    <div>
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <div className="flex flex-col justify-center items-center h-screen p-10">
+      <JoinRoom/>
     </div>
   )
 }
