@@ -16,6 +16,17 @@ const io = new Server(server, {
 
 io.on('connection',  (socket) => {
   console.log(`ID: ${socket.id} se ha unido`)
+
+  socket.on("join-room", (data) => {
+    socket.join(data);
+    console.log(`ID: ${socket.id} joined room ${data}`)
+  });
+
+  socket.on("send-message", (data) => {
+    socket.to(data.room).emit("receive-message", data);
+    console.log(data);
+  })
+
   socket.on('disconnect', () => {
     console.log(`ID: ${socket.id} ha abandonado la sala`)
   })
