@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 //libraries
 import socketIO from 'socket.io-client';
+import ForgotPassword from "./components/ForgotPassword";
 import Home from './components/Home';
 import TemplateLayout from "./components/layout/TemplateLayout";
 import SignUp from "./components/SignUp";
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={<TemplateLayout />}>
         <Route index element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
     </Routes>
     </BrowserRouter>
