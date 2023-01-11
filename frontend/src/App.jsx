@@ -1,9 +1,12 @@
 //instances
 const socket = socketIO.connect('http://127.0.0.1:5173');
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 //libraries
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import socketIO from 'socket.io-client';
+
+//components
+import Error404 from "./components/Error404";
 import ForgotPassword from "./components/ForgotPassword";
 import Home from './components/Home';
 import TemplateLayout from "./components/layout/TemplateLayout";
@@ -17,6 +20,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="*" element={<Error404 />} />
       </Route>
     </Routes>
     </BrowserRouter>

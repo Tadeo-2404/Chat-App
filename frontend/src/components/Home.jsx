@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { HiOutlineMail, HiOutlineKey } from 'react-icons/hi';
 const Home = () => {
   return (
     <div className="bg-white shadow-2xl">
@@ -13,23 +14,29 @@ const Home = () => {
         <fieldset className="flex flex-col justify-center items-center gap-6 w-full">
           <div className="flex flex-col justify-start items-start w-full">
             <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              name="email"
-              id="email"
-              placeholder="Enter your email"
-              className="p-2 outline-none border-b-2 active:border-blue-600 hover:border-blue-600 focus:border-blue-600 font-xl w-full"
-            />
+            <div className="flex justify-center w-full">
+              <input
+                type="text"
+                name="email"
+                id="email"
+                placeholder="Enter your email"
+                className="p-2 outline-none border-b-2 active:border-blue-600 hover:border-blue-600 focus:border-blue-600 font-xl w-full"
+              />
+              <HiOutlineMail className="text-xl text-blue-600"/>
+            </div>
           </div>
           <div className="flex flex-col justify-start items-start w-full">
             <label htmlFor="email">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Enter your password"
-              className="p-2 outline-none border-b-2 active:border-blue-600 hover:border-blue-600 focus:border-blue-600 font-xl w-full"
-            />
+            <div className="flex justify-center w-full">
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Enter your password"
+                className="p-2 outline-none border-b-2 active:border-blue-600 hover:border-blue-600 focus:border-blue-600 font-xl w-full"
+              />
+              <HiOutlineKey className="text-xl text-blue-600"/>
+            </div>
           </div>
         </fieldset>
         <div className="flex justify-between text-center w-full">
