@@ -1,11 +1,14 @@
 import { Outlet } from 'react-router-dom';
+import NavBar from '../NavBar';
 const TemplateLayout = () => {
   return (
     <div>
-        <h1>Chat app</h1>
+      <NavBar/>
+      <div className='h-screen flex flex-col justify-center items-center'>
         <Outlet />
+      </div>
     </div>
-  )
+  );
 }
 
 export default TemplateLayout
