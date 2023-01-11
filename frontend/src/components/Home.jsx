@@ -47,7 +47,7 @@ const Home = () => {
             </p>
           </Link>
 
-          <Link to="/register">
+          <Link to="/sign-up">
             <p className="text-blue-600 capitalize hover:underline">
               Don't have an account?
             </p>

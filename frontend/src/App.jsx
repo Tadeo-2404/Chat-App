@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import socketIO from 'socket.io-client';
 import Home from './components/Home';
 import TemplateLayout from "./components/layout/TemplateLayout";
+import SignUp from "./components/SignUp";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
     <Routes>
       <Route path="/" element={<TemplateLayout />}>
         <Route index element={<Home />} />
+        <Route path="/sign-up" element={<SignUp />} />
       </Route>
     </Routes>
     </BrowserRouter>
