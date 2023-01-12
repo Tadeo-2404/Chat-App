@@ -1,37 +1,25 @@
 import express from "express"
-import http from "http";
+import dotenv from 'dotenv/config';
+import clienteRoutes from './routes/ClienteRoutes.js';
+import db from "./config/db.js";
 import cors from "cors";
-import { Server } from "socket.io";
+
+try {
+  const name = db.getDatabaseName();
+  await db.authenticate();
+  console.log(`Connection to ${name} database has been established successfully.`);
+} catch (error) {
+  console.error(`Unable to connect to the database:`, error);
+}
+
 const app = express();
-const server = http.createServer(app);
-const port = process.env.PORT || 3000;
-app.use(cors());
+const port = process.env.PORT || 4000
+app.use(cors({'origin': '*'}));
+app.use(express.json());
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
 
-io.on('connection',  (socket) => {
-  console.log(`ID: ${socket.id} se ha unido`)
+app.use('/client', clienteRoutes);
 
-  socket.on("join-room", (data) => {
-    socket.join(data);
-    console.log(`ID: ${socket.id} joined room ${data}`)
-  });
-
-  socket.on("send-message", (data) => {
-    socket.to(data.room).emit("receive-message", data);
-    console.log(data);
-  })
-
-  socket.on('disconnect', () => {
-    console.log(`ID: ${socket.id} ha abandonado la sala`)
-  })
-})
-
-server.listen(port, () => {
-  console.log(`APP ON PORT: ${port}`)
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`)
 })
