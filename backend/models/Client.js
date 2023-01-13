@@ -1,6 +1,7 @@
 import Sequelize from "sequelize";
 import db from '../config/db.js';
 import generateID from "../functions/generateID.js";
+import bcrypt from 'bcrypt';
 
 export const Client = db.define("client", {
   id: {
@@ -22,10 +23,13 @@ export const Client = db.define("client", {
   timestamps: true,
   updatedAt: false,
   createdAt: false,
-});
 
-db.sync().then(() => {
-  console.log('client table created successfully!');
-}).catch((error) => {
-  console.error('Unable to create client table : ', error);
+  hooks: {
+    beforeCreate: async (client) => {
+      if (client.password) {
+       const salt = await bcrypt.genSaltSync(10, 'a');
+       client.password = bcrypt.hashSync(client.password, salt);
+      }
+     }
+  }
 });

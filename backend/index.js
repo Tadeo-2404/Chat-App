@@ -6,6 +6,7 @@ import cors from "cors";
 
 try {
   await db.authenticate();
+  await db.sync();
   console.log(`Connection to database has been established successfully.`);
 } catch (error) {
   console.error(`Unable to connect to the database:`, error);
