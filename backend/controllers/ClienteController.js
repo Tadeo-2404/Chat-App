@@ -1,20 +1,44 @@
 import { Client } from "../models/Client.js";
 
-const LogIn = (req, res) => {
+//public areas
+const LogIn = async (req, res) => {
+    const { password, email } = req.body;
+    const validateEmail = await Client.findOne({where: {email: email}}); //buscar si existe cliente con email
+
+    if(!validateEmail) { //validar si existe email
+        const e = new Error("this user is not registered");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
+    const validatePassword = await validateEmail.comparePassword(password);
+    if(!validatePassword) {
+        const e = new Error("password is not correct");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
     res.json({msg: 'login'});
 }
 
 const SignUp = async (req, res) => {
-    const { password, email } = req.body; //leer formulario
+    const { username ,password, email } = req.body; //leer formulario
     const validatePassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/; //regex validar password
 
     const validateEmail = await Client.findOne({where: {email: email}}); //buscar si existe cliente con email
+    const validateUsername = await Client.findOne({where: {username: username}});
 
     if(validateEmail) { //validar si existe email
         const e = new Error("Email already on use, try again");
         res.status(400).json({msg: e.message});
         return;
     } 
+
+    if(validateUsername) {
+        const e = new Error("Username already on use, try again");
+        res.status(400).json({msg: e.message});
+        return;
+    }
     
     if(!validatePassword.test(password)) { //validar strong password
         const e = new Error("Password not valid, try again");
@@ -27,6 +51,7 @@ const SignUp = async (req, res) => {
         const clientCreated = await client.save(); //guardar cliente en db
         res.json(clientCreated);
     } catch (error) {
+        console.log(error);
         const e = new Error("Something went wrong");
         res.status(400).json({msg: e.message});
     }
@@ -36,6 +61,7 @@ const ForgotPassword = (req, res) => {
     res.json({msg: 'forgot-password'});
 }
 
+//private routes
 const Profile = (req, res) => {
     res.json({msg: 'profile'})
 }

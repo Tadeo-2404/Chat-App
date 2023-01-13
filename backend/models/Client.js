@@ -1,13 +1,12 @@
 import Sequelize from "sequelize";
 import db from '../config/db.js';
-import generateID from "../functions/generateID.js";
 import bcrypt from 'bcrypt';
 
-export const Client = db.define("client", {
+export const Client = db.define("Clients", {
   id: {
-    type: Sequelize.STRING,
+    type: Sequelize.INTEGER,
     primaryKey: true,
-    defaultValue: generateID(),
+    autoIncrement: true,
   },
   username: {
     type: Sequelize.STRING,
@@ -33,3 +32,7 @@ export const Client = db.define("client", {
      }
   }
 });
+
+Client.prototype.comparePassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
