@@ -58,6 +58,28 @@ const SignUp = async (req, res) => {
     }
 }
 
+const ConfirmAccount = async (req, res) => {
+    const { token } = req.params; //leer token de url
+
+    const client = await Client.findOne({where: {token: token}});
+
+    if(!client) { //validar si existe email
+        const e = new Error("Token invalid, try again");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
+    try {
+        client.token = null; //generar token
+        client.confirmed = true;
+        await client.save(); //guardar token
+        res.json({msg: 'account confirmed succesfuly'});
+    } catch (e) {
+        const error = new Error("Something went wrong");
+        res.status(400).json({msg: error.message});
+    }
+}
+
 const ForgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -80,6 +102,11 @@ const ForgotPassword = async (req, res) => {
     }
 }
 
+const NewPassword = async (req, res) => {
+    res.json({msg: 'insert new password'})
+}
+
+
 //private routes
 const Profile = (req, res) => {
     res.json({msg: 'profile'})
@@ -100,7 +127,9 @@ const Room = (req, res) => {
 export {
     LogIn,
     SignUp,
+    ConfirmAccount,
     ForgotPassword,
+    NewPassword,
     Profile,
     JoinRoom,
     Room,
