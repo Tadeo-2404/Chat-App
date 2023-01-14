@@ -1,3 +1,4 @@
+import generateToken from "../functions/generateToken.js";
 import { Client } from "../models/Client.js";
 
 //public areas
@@ -57,8 +58,26 @@ const SignUp = async (req, res) => {
     }
 }
 
-const ForgotPassword = (req, res) => {
-    res.json({msg: 'forgot-password'});
+const ForgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    //buscar cliente con correo
+    const client = await Client.findOne({where: {email: email}});
+
+    if(!client) { //validar si existe email
+        const e = new Error("This email doesn't exist, try again");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
+    try {
+        client.token = generateToken(); //generar token
+        await client.save(); //guardar token
+        res.json({msg: 'an email has been sent to confirm your account'});
+    } catch (e) {
+        const error = new Error("Something went wrong");
+        res.status(400).json({msg: error.message});
+    }
 }
 
 //private routes

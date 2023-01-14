@@ -18,6 +18,14 @@ export const Client = db.define("Clients", {
   password: {
     type: Sequelize.STRING,
   },
+  confirmed: {
+    type: Sequelize.STRING,
+    defaultValue: false
+  },
+  token: {
+    type: Sequelize.STRING,
+    defaultValue: null
+  }
 }, {
   timestamps: true,
   updatedAt: false,
