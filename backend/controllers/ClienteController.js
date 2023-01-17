@@ -12,6 +12,12 @@ const LogIn = async (req, res) => {
         return;
     }
 
+    if(!validateEmail.confirmed) {
+        const e = new Error("this account is not confirmed");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
     const validatePassword = await validateEmail.comparePassword(password);
     if(!validatePassword) {
         const e = new Error("password is not correct");
@@ -30,19 +36,19 @@ const SignUp = async (req, res) => {
     const validateUsername = await Client.findOne({where: {username: username}});
 
     if(validateEmail) { //validar si existe email
-        const e = new Error("Email already on use, try again");
+        const e = new Error("email already on use, try again");
         res.status(400).json({msg: e.message});
         return;
     } 
 
     if(validateUsername) {
-        const e = new Error("Username already on use, try again");
+        const e = new Error("username already on use, try again");
         res.status(400).json({msg: e.message});
         return;
     }
     
     if(!validatePassword.test(password)) { //validar strong password
-        const e = new Error("Password not valid, try again");
+        const e = new Error("password not valid, try again");
         res.status(400).json({msg: e.message});
         return;
     } 
@@ -53,7 +59,7 @@ const SignUp = async (req, res) => {
         res.json(clientCreated);
     } catch (error) {
         console.log(error);
-        const e = new Error("Something went wrong");
+        const e = new Error("something went wrong");
         res.status(400).json({msg: e.message});
     }
 }
@@ -64,7 +70,7 @@ const ConfirmAccount = async (req, res) => {
     const client = await Client.findOne({where: {token: token}});
 
     if(!client) { //validar si existe email
-        const e = new Error("Token invalid, try again");
+        const e = new Error("token invalid, try again");
         res.status(400).json({msg: e.message});
         return;
     }
@@ -75,7 +81,7 @@ const ConfirmAccount = async (req, res) => {
         await client.save(); //guardar token
         res.json({msg: 'account confirmed succesfuly'});
     } catch (e) {
-        const error = new Error("Something went wrong");
+        const error = new Error("something went wrong");
         res.status(400).json({msg: error.message});
     }
 }
@@ -85,9 +91,16 @@ const ForgotPassword = async (req, res) => {
 
     //buscar cliente con correo
     const client = await Client.findOne({where: {email: email}});
+    console.log(client.confirmed)
 
     if(!client) { //validar si existe email
-        const e = new Error("This email doesn't exist, try again");
+        const e = new Error("this email doesn't exist, try again");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
+    if(!client.confirmed) {
+        const e = new Error("this account is not confirmed");
         res.status(400).json({msg: e.message});
         return;
     }
@@ -103,7 +116,39 @@ const ForgotPassword = async (req, res) => {
 }
 
 const NewPassword = async (req, res) => {
-    res.json({msg: 'insert new password'})
+    //leer token de url
+    const { token } = req.params; 
+    const { password } = req.body;
+    const client = await Client.findOne({where: {token: token}});
+    const validatePassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/; //regex validar password
+
+    if(!client) { //validar si existe token
+        const e = new Error("token invalid, try again");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
+    if(!client.confirmed) {
+        const e = new Error("this account is not confirmed");
+        res.status(400).json({msg: e.message});
+        return;
+    }
+
+
+    if(!validatePassword.test(password)) { //validar strong password
+        const e = new Error("password not valid, try again");
+        res.status(400).json({msg: e.message});
+        return;
+    } 
+
+    try {
+        client.token = null;
+        client.password = password;
+        await client.save();
+        res.json(client);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
