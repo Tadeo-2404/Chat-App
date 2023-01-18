@@ -1,5 +1,6 @@
 import express from "express"
 import { ConfirmAccount, ForgotPassword, getRoom, JoinRoom, LogIn, NewPassword, Profile, Room, SignUp } from "../controllers/ClienteController.js";
+import authUser from "../middleware/authUser.js";
 const router = express.Router();
 
 //public routes
@@ -10,9 +11,9 @@ router.post('/forgot-password', ForgotPassword)
 router.put('/forgot-password/:token', NewPassword);
 
 //private routes
-router.post('/profile', Profile)
-router.post('/join-room', JoinRoom)
-router.get('/room', getRoom);
-router.post('/room', Room);
+router.post('/profile', authUser ,Profile)
+router.post('/join-room', authUser ,JoinRoom)
+router.get('/room', authUser ,getRoom);
+router.post('/room', authUser ,Room);
 
 export default router;
