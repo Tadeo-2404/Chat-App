@@ -1,3 +1,4 @@
+import generateJWT from "../functions/generateJWT.js";
 import generateToken from "../functions/generateToken.js";
 import { Client } from "../models/Client.js";
 
@@ -25,7 +26,7 @@ const LogIn = async (req, res) => {
         return;
     }
 
-    res.json({msg: 'login'});
+    res.json({token: generateJWT(validateEmail.id)});
 }
 
 const SignUp = async (req, res) => {
