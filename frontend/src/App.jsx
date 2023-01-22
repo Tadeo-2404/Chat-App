@@ -1,9 +1,5 @@
-//instances
-const socket = socketIO.connect('http://127.0.0.1:5173');
-
 //libraries
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import socketIO from 'socket.io-client';
 
 //components
 import Error404 from "./components/Error404";
