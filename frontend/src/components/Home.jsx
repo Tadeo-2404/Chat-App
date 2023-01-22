@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { HiOutlineMail, HiOutlineKey } from "react-icons/hi";
 import { MdError } from "react-icons/md";
+import ClipLoader from "react-spinners/ClipLoader";
 import { useState } from "react";
 import axios from "axios";
 
@@ -9,8 +10,11 @@ const Home = () => {
   const [password, setPassword] = useState("");
   const [errorEmail, setErrorEmail] = useState({});
   const [errorPassword, setErrorPassword] = useState({});
+  const [errorServer, setErrorServer] = useState("");
+  const [load, setLoad] = useState(false);
 
   const handleSubmit = async (event) => {
+    setLoad(true);
     event.preventDefault();
 
     if (email.length <= 0) {
@@ -19,9 +23,9 @@ const Home = () => {
         name: "not-email",
         msg: "email field is requiered",
       });
-
+      setLoad(false);
       setTimeout(() => {
-        setErrorEmail({})
+        setErrorEmail({});
       }, 2500);
       return;
     }
@@ -32,9 +36,9 @@ const Home = () => {
         name: "not-password",
         msg: "password field is requiered",
       });
-
+      setLoad(false);
       setTimeout(() => {
-        setErrorPassword({})
+        setErrorPassword({});
       }, 2500);
       return;
     }
@@ -44,21 +48,28 @@ const Home = () => {
         name: "password-length",
         msg: "password field is not 8 char",
       });
-
+      setLoad(false);
       setTimeout(() => {
-        setErrorPassword({})
+        setErrorPassword({});
       }, 2500);
       return;
     }
 
     try {
-      const connect = await axios.post('http://localhost:4000/client', {email, password})
-      console.log(connect);
+      const { data } = await axios.post("http://localhost:4000/client", {
+        email,
+        password,
+      });
+      setLoad(false);
     } catch (error) {
-      console.log(error);
+      setErrorServer(error.response.data.msg);
+      setLoad(false);
+      setTimeout(() => {
+        setErrorServer("");
+      }, 2500);
     }
   };
-  
+
   return (
     <div className="bg-white shadow-2xl">
       <form
@@ -148,12 +159,28 @@ const Home = () => {
             </div>
           </div>
         </fieldset>
-        <div className="flex justify-between text-center w-full">
+        <div className="flex flex-col justify-center items-center text-center w-full">
+          {load && (
+            <ClipLoader
+              aria-label="Loading Spinner"
+              data-testid="loader"
+              color="blue"
+              size={70}
+              className="mb-10"
+            />
+          )}
+
           <input
             type="submit"
             className="bg-blue-600 text-white p-2 font-semibold text-md w-full uppercase rounded-xl hover:bg-gradient-to-r hover:from-blue-400"
             value="Log In"
           />
+
+          {errorServer && (
+            <div className="w-full bg-red-600 text-white uppercase p-2 font-semibold text-md rounded-xl mt-3">
+              <p>{errorServer}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between w-full gap-24 text-center">
