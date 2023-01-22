@@ -155,7 +155,8 @@ const NewPassword = async (req, res) => {
 
 //private routes
 const Profile = (req, res) => {
-    res.json({msg: 'profile'})
+    const { client } = req;
+    res.json({client: client})
 }
 
 const JoinRoom = (req, res) => {

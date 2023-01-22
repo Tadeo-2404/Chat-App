@@ -20,7 +20,7 @@ export const Client = db.define("Clients", {
     type: Sequelize.STRING,
   },
   confirmed: {
-    type: Sequelize.STRING,
+    type: Sequelize.BOOLEAN,
     defaultValue: false
   },
   token: {
@@ -34,15 +34,26 @@ export const Client = db.define("Clients", {
 
   hooks: {
     beforeCreate: async (client) => {
-      client.token = generateToken();
-      if (client.password) {
-       const salt = await bcrypt.genSaltSync(10, 'a');
-       client.password = bcrypt.hashSync(client.password, salt);
-      }
+      await createToken(client);
+      await hashPassword(client);
      },
+     beforeUpdate: async (client) => {
+      await hashPassword(client);
+     }
   }
 });
-
+ //compare password before login in
 Client.prototype.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
+
+//hashes the password once created
+const hashPassword = async (client) => {
+  const salt = await bcrypt.genSaltSync(10, 'a');
+  client.password = bcrypt.hashSync(client.password, salt);
+}
+
+//generate token for auth 
+const createToken = async (client) => {
+  return client.token = generateToken();
+}
