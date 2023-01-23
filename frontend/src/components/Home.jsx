@@ -61,6 +61,7 @@ const Home = () => {
         password,
       });
       setLoad(false);
+      console.log(data);
     } catch (error) {
       setErrorServer(error.response.data.msg);
       setLoad(false);
@@ -89,7 +90,7 @@ const Home = () => {
                 <>
                   <div className="flex flex-col w-full">
                     <input
-                      type="text"
+                      type="email"
                       name="email"
                       id="email"
                       placeholder="Error"
@@ -120,7 +121,7 @@ const Home = () => {
             </div>
           </div>
           <div className="flex flex-col justify-start items-start w-full">
-            <label htmlFor="email">Password</label>
+            <label htmlFor="password">Password</label>
             <div className="flex justify-center w-full">
               {Object.keys(errorPassword).length > 0 ? (
                 <>

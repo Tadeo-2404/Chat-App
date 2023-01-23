@@ -57,7 +57,7 @@ const SignUp = async (req, res) => {
     try {
         const client = new Client(req.body); //crear instancia de cliente
         const clientCreated = await client.save(); //guardar cliente en db
-        res.json(clientCreated);
+        res.json({msg: 'an email has been send, confirm your account'});
     } catch (error) {
         console.log(error);
         const e = new Error("something went wrong");
