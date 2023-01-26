@@ -1,5 +1,6 @@
 import generateJWT from "../functions/generateJWT.js";
 import generateToken from "../functions/generateToken.js";
+import sendEmailConfirmAccount from "../functions/senfEmailConfirmAccount.js";
 import { Client } from "../models/Client.js";
 
 //public areas
@@ -56,8 +57,9 @@ const SignUp = async (req, res) => {
     
     try {
         const client = new Client(req.body); //crear instancia de cliente
-        const clientCreated = await client.save(); //guardar cliente en db
-        res.json({msg: 'an email has been send, confirm your account'});
+        await sendEmailConfirmAccount(client);
+        await client.save(); //guardar cliente en db
+        res.json({msg: 'an email has been sent to confirm your account'});
     } catch (error) {
         console.log(error);
         const e = new Error("something went wrong");
@@ -109,7 +111,7 @@ const ForgotPassword = async (req, res) => {
     try {
         client.token = generateToken(); //generar token
         await client.save(); //guardar token
-        res.json({msg: 'an email has been sent to confirm your account'});
+        res.json({msg: 'an email has been sent to restore your password'});
     } catch (e) {
         const error = new Error("Something went wrong");
         res.status(400).json({msg: error.message});
