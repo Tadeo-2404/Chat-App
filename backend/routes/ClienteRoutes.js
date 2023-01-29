@@ -1,5 +1,5 @@
 import express from "express"
-import { ConfirmAccount, ForgotPassword, getRoom, JoinRoom, LogIn, NewPassword, Profile, Room, SignUp } from "../controllers/ClienteController.js";
+import { ConfirmAccount, ForgotPassword, getRoom, JoinRoom, LogIn, NewPassword, Profile, Room, SignUp, VerifyToken } from "../controllers/ClienteController.js";
 import authUser from "../middleware/authUser.js";
 const router = express.Router();
 
@@ -8,6 +8,7 @@ router.post('/', LogIn);
 router.post('/sign-up', SignUp)
 router.post('/confirm-account/:token', ConfirmAccount)
 router.post('/forgot-password', ForgotPassword)
+router.get('/forgot-password/:token', VerifyToken);
 router.put('/forgot-password/:token', NewPassword);
 
 //private routes

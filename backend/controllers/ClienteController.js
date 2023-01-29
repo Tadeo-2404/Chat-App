@@ -118,6 +118,18 @@ const ForgotPassword = async (req, res) => {
     }
 }
 
+const VerifyToken = async (req, res) => {
+    const {token} = req.params;
+    const found = await Client.findOne({where: {token: token}});
+
+    if(found) {
+        res.json({msg: "Type in your new password"});
+    } else {
+        const error = new Error("token not found");
+        return res.status(400).json({msg: error.message});
+    }
+}
+
 const NewPassword = async (req, res) => {
     //leer token de url
     const { token } = req.params; 
@@ -148,7 +160,7 @@ const NewPassword = async (req, res) => {
         client.token = null;
         client.password = password;
         await client.save();
-        res.json(client);
+        res.json({msg: 'Password changed sucessfully'});
     } catch (error) {
         console.log(error);
     }
@@ -178,6 +190,7 @@ export {
     SignUp,
     ConfirmAccount,
     ForgotPassword,
+    VerifyToken,
     NewPassword,
     Profile,
     JoinRoom,
