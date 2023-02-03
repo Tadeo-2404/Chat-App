@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiOutlineKey } from "react-icons/hi";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useState } from "react";
-import axios from "axios";
+import { io } from "socket.io-client";
+const socket = io.connect("ws://localhost:4000");
 
 const JoinRoom = () => {
     const [room_id, setRoomID] = useState("");
@@ -11,20 +12,17 @@ const JoinRoom = () => {
     const nav = useNavigate();
 
     const handleSubmit = () => {
-        console.log('joining');
+        socket.emit("join-room", room_id);
     }
 
   return (
     <div className="bg-white shadow-2xl">
-      <form
-        action="/user"
-        method="post"
+      <div
         className="p-8 flex flex-col justify-center items-center gap-8"
-        onSubmit={handleSubmit}
       >
-        <legend className="text-blue-600 text-2xl uppercase font-bold">
+        <h1 className="text-blue-600 text-2xl uppercase font-bold">
           Join Room
-        </legend>
+        </h1>
         <fieldset className="flex flex-col justify-center items-center gap-6 w-full">
           <div className="flex flex-col justify-start items-start w-full">
             <label htmlFor="room_id">Room ID</label>
@@ -57,6 +55,7 @@ const JoinRoom = () => {
             type="submit"
             className="bg-blue-600 text-white p-2 font-semibold text-md w-full uppercase rounded-xl hover:bg-gradient-to-r hover:from-blue-400"
             value="Join a Room"
+            onClick={handleSubmit}
           />
 
           {errorServer && (
@@ -66,7 +65,7 @@ const JoinRoom = () => {
           )}
         </div>
 
-      </form>
+      </div>
     </div>
   )
 }
