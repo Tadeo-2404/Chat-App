@@ -6,6 +6,7 @@ import ConfirmAccount from "./components/ConfirmAccount";
 import Error404 from "./components/Error404";
 import ForgotPassword from "./components/ForgotPassword";
 import Home from './components/Home';
+import JoinRoom from "./components/JoinRoom";
 import TemplateLayout from "./components/layout/TemplateLayout";
 import NewPassword from "./components/NewPassword";
 import SignUp from "./components/SignUp";
@@ -20,6 +21,11 @@ function App() {
         <Route path="/confirm-account/:token" element={<ConfirmAccount />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password/:token" element={<NewPassword />} />
+        <Route path="*" element={<Error404 />} />
+      </Route>
+
+      <Route path="/user" element={<TemplateLayout />}>
+        <Route index element={<JoinRoom />} />
         <Route path="*" element={<Error404 />} />
       </Route>
     </Routes>

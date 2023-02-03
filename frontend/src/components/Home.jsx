@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineMail, HiOutlineKey } from "react-icons/hi";
 import { MdError } from "react-icons/md";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -12,6 +12,7 @@ const Home = () => {
   const [errorPassword, setErrorPassword] = useState({});
   const [errorServer, setErrorServer] = useState("");
   const [load, setLoad] = useState(false);
+  const nav = useNavigate();
 
   const handleSubmit = async (event) => {
     setLoad(true);
@@ -61,7 +62,7 @@ const Home = () => {
         password,
       });
       setLoad(false);
-      console.log(data);
+      nav('/user');
     } catch (error) {
       setErrorServer(error.response.data.msg);
       setLoad(false);
